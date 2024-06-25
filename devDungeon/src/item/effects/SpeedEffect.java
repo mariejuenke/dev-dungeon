@@ -1,7 +1,17 @@
 package item.effects;
 
+import com.badlogic.gdx.math.Vector2;
+import contrib.components.HealthComponent;
+import contrib.utils.components.health.Damage;
+import contrib.utils.components.health.DamageType;
 import core.Entity;
+import core.components.PlayerComponent;
+import core.components.VelocityComponent;
+import core.utils.components.MissingComponentException;
+import entities.DevHeroFactory;
 import systems.EventScheduler;
+
+import java.util.Vector;
 
 /**
  * Provides a mechanism to apply a temporary speed increase effect to an entity within the game.
@@ -36,6 +46,21 @@ public class SpeedEffect {
    * @param target The entity to which the speed effect will be applied.
    */
   public void applySpeedEffect(Entity target) {
-    throw new UnsupportedOperationException("Method not implemented.");
+      if (target.fetch(PlayerComponent.class).isEmpty()) {
+          throw new UnsupportedOperationException(
+              "Movement speed can only be applied to player entities.");
+      }
+
+      VelocityComponent orig =  target.fetch(VelocityComponent.class).get();
+      target.add(new VelocityComponent( orig.xVelocity() + speedIncrease,orig.yVelocity() + speedIncrease));
+
+      EVENT_SCHEDULER.scheduleAction(
+          () -> {
+              VelocityComponent current =  target.fetch(VelocityComponent.class).get();
+              VelocityComponent velocityComponent = new VelocityComponent(current.xVelocity() - speedIncrease,current.yVelocity() - speedIncrease);
+              target.add(velocityComponent);
+          }, this.duration * 1000L);
+
   }
-}
+  }
+
