@@ -262,8 +262,7 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
     }
 
     private Entity spawnBoss() {
-        Entity b =
-          EntityUtils.spawnBoss(
+        return EntityUtils.spawnBoss(
               BOSS_TYPE,
               this.levelBossSpawn,
               (e) -> {
@@ -278,7 +277,6 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
 
                 this.exitTiles().forEach(tile -> tile.tintColor(-1)); // Workaround due to FogOfWar
               });
-        return b;
     }
 
     private void enableTeleporterSystem() {
@@ -347,18 +345,18 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
     }
 
     /** TODO: Refactor this method, and add JavaDoc */
-  public void lightTorch(DevDungeonRoom r, int i, boolean lit) {
-    if (r.torches()[i]
+  public void lightTorch(DevDungeonRoom dungeonRoom, int i, boolean isLit) {
+    if (dungeonRoom.torches()[i]
             .fetch(TorchComponent.class)
             .orElseThrow(
-                () -> MissingComponentException.build(r.torches()[i], TorchComponent.class))
+                () -> MissingComponentException.build(dungeonRoom.torches()[i], TorchComponent.class))
             .lit()
-        == lit) return;
-    r.torches()[i]
+        == isLit) return;
+    dungeonRoom.torches()[i]
         .fetch(InteractionComponent.class)
         .orElseThrow(
-            () -> MissingComponentException.build(r.torches()[i], InteractionComponent.class))
-        .triggerInteraction(r.torches()[i], Game.hero().orElse(null));
+            () -> MissingComponentException.build(dungeonRoom.torches()[i], InteractionComponent.class))
+        .triggerInteraction(dungeonRoom.torches()[i], Game.hero().orElse(null));
   }
 
   /**
