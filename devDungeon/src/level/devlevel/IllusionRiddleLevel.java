@@ -161,16 +161,12 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
                 pit.timeToOpen(50L * Game.currentLevel().RANDOM.nextInt(1, 5));
                 pit.close();
               });
+
       this.rooms.forEach(DevDungeonRoom::spawnEntities);
 
-      // Create teleporters
-      for (int i = 65; i < 127; i += 2) {
-        TeleporterSystem.getInstance()
-            .registerTeleporter(
-                new Teleporter(this.customPoints().get(i), this.customPoints().get(i + 1)));
-      }
+        createTeleporters();
 
-      // Setup TP Targets for TPBallSkill
+        // Setup TP Targets for TPBallSkill
       int[] roomIndices = {0, 1, 2, 3, 7};
       for (int ri : roomIndices) {
         this.addTPTarget(
@@ -288,6 +284,15 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
 
     this.riddleHandler.onTick(isFirstTick);
   }
+
+    private void createTeleporters() {
+        // Create teleporters
+        for (int i = 65; i < 127; i += 2) {
+          TeleporterSystem.getInstance()
+              .registerTeleporter(
+                  new Teleporter(this.customPoints().get(i), this.customPoints().get(i + 1)));
+        }
+    }
 
     private static void showInitialDialog() {
         DialogFactory.showTextPopup(
