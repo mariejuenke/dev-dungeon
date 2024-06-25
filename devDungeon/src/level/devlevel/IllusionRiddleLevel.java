@@ -151,11 +151,9 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
   @Override
   public void onTick(boolean isFirstTick) {
     if (isFirstTick) {
-      DialogFactory.showTextPopup(
-          "Wait, who turned off the lights? Try to find a way out of this dark place.",
-          "Level " + DevDungeon.DUNGEON_LOADER.currentLevelIndex() + ": The Illusion Riddle");
+        showInitialDialog();
 
-      ((ExitTile) this.endTile()).close(); // close exit at start (to force defeating the boss)
+        ((ExitTile) this.endTile()).close(); // close exit at start (to force defeating the boss)
       this.doorTiles().forEach(DoorTile::close);
       this.pitTiles()
           .forEach(
@@ -291,7 +289,13 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
     this.riddleHandler.onTick(isFirstTick);
   }
 
-  /** TODO: Refactor this method, and add JavaDoc */
+    private static void showInitialDialog() {
+        DialogFactory.showTextPopup(
+            "Wait, who turned off the lights? Try to find a way out of this dark place.",
+            "Level " + DevDungeon.DUNGEON_LOADER.currentLevelIndex() + ": The Illusion Riddle");
+    }
+
+    /** TODO: Refactor this method, and add JavaDoc */
   public void lightTorch(DevDungeonRoom r, int i, boolean lit) {
     if (r.torches()[i]
             .fetch(TorchComponent.class)
